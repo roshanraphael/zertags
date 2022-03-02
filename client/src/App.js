@@ -13,7 +13,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
-
+import GenerateQR from "./components/generateQR/GenerateQR";
 import "./App.css";
 
 // Check for token to keep user logged in
@@ -47,6 +47,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/generateQR" component={GenerateQR} />
             </Switch>
           </div>
         </Router>

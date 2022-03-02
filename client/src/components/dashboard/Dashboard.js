@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
@@ -12,7 +13,6 @@ const ScanQR = ({ setScanResult }) => {
     if (result) {
       setScanResult(result.text);
     }
-
   }
   return (
     <QrReader
@@ -26,19 +26,21 @@ const ScanQR = ({ setScanResult }) => {
 }
 const Dashboard = props => {
   console.log(props);
+  const [scanResult, setScanResult] = useState(null);
+  const [showScanner, setShowScanner] = useState(false);
+  const { user } = props.auth;
   const onLogoutClick = e => {
     e.preventDefault();
     props.logoutUser();
   };
-  const [scanResult, setScanResult] = useState(null);
-  const [showScanner, toggleShowScanner] = useState(false);
-  const { user } = props.auth;
-  // class Dashboard extends Component {
-
-
-  //   render() {
-  //     const { user } = this.props.auth;
-
+  const toggleShowScanner = () => {
+    setShowScanner(!showScanner);
+  }
+  useEffect(() => {
+    if (!showScanner) {
+      
+    }
+  }, [showScanner]);
   return (
     <div style={{ height: "75vh", flexDirection: "column" }} className="container valign-wrapper">
       <div className="row">
@@ -107,7 +109,8 @@ const Dashboard = props => {
           display: "flex",
           justifyContent: "center"
         }}>
-          <button
+          <Link
+            to="/generateQR"
             style={{
               borderRadius: "3px",
               letterSpacing: "1.5px",
@@ -116,7 +119,7 @@ const Dashboard = props => {
             className="btn btn-large waves-effect waves-light hoverable blue accent-4"
           >
             Generate a new QR <span className="emoji" aria-label="gear emoji" role="img">⚙️</span>
-          </button>
+          </Link>
         </div>
         <div className="col s12" style={{
           display: "flex",
