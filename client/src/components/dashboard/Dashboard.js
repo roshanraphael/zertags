@@ -29,6 +29,8 @@ const Dashboard = props => {
   const [scanResult, setScanResult] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const { user } = props.auth;
+  const items = props.items;
+  console.log("Items: ", items);
   const onLogoutClick = e => {
     e.preventDefault();
     props.logoutUser();
@@ -150,7 +152,8 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  items: state.items
 });
 
 export default connect(

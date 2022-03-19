@@ -1,15 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { useState } from "react";
-const GenerateQR = () => {
+import QRCodeStyling from "qr-code-styling";
+import { addItem } from "../../actions/itemActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+const GenerateQR = props => {
+    const { user } = props.auth;
     const [data, setData] = useState({
         itemName: ''
     });
+    const qrCode = new QRCodeStyling({
+        width: 300,
+        height: 300,
+        image:
+            "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+        dotsOptions: {
+            color: "#4267b2",
+            type: "rounded"
+        },
+        imageOptions: {
+            crossOrigin: "anonymous",
+            margin: 20
+        }
+    });
     const onChange = e => {
-        setData({[e.target.name]: e.target.value  })
+        setData({ [e.target.name]: e.target.value })
     }
     const onSubmit = e => {
         e.preventDefault();
-        console.log(data);
+        const itemData = {
+            ...data,
+            ...{
+                email: user.email
+            }
+        }
+        console.log(itemData);
+        props.addItem(itemData, props.history);
     }
     return (
         <div className="container" style={{ marginTop: "2rem" }}>
@@ -36,6 +63,20 @@ const GenerateQR = () => {
                             />
                             <label htmlFor="itemName">Name</label>
                         </div>
+                        <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                            <button
+                                style={{
+                                    width: "150px",
+                                    borderRadius: "3px",
+                                    letterSpacing: "1.5px",
+                                    marginTop: "1rem"
+                                }}
+                                type="submit"
+                                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+                            >
+                                Save item
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -43,4 +84,18 @@ const GenerateQR = () => {
     )
 }
 
-export default GenerateQR;
+GenerateQR.propTypes = {
+    addItem: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+export default connect(
+    mapStateToProps,
+    { addItem }
+  )(withRouter(GenerateQR));
+  

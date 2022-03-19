@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const Item = {
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+}
 // Create Schema
 const UserSchema = new Schema({
   name: {
@@ -15,6 +28,11 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  items: [Item],
+  // items: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: "items"
+  // }],
   date: {
     type: Date,
     default: Date.now
