@@ -1,10 +1,10 @@
-.navbarCustom nav .nav-wrapper {
-    background: linear-gradient(160deg, rgba(255, 0, 0, 0.2) 1%,    rgba(255,255,255,1) 15%);
+nav {
+    transition: 0.3s ease-in;
 }
 .navTitle {
-    background: linear-gradient(to right, #000 50%, rgb(156, 156, 0) 60%, rgb(155, 0, 0) 80%, rgb(0, 57, 131) 95%, #000 100%);
+    background: linear-gradient(to right, #fff 50%, rgb(250, 250, 63) 60%, rgb(245, 128, 128) 80%, rgb(126, 179, 248) 95%, #fff 100%);
     background-size: 200% auto;
-    color: #000;
+    color: rgb(255, 255, 255);
     background-clip: text;
     text-fill-color: transparent;
     -webkit-background-clip: text;

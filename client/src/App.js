@@ -16,6 +16,8 @@ import Dashboard from "./components/dashboard/Dashboard";
 import GenerateQR from "./components/generateQR/GenerateQR";
 import "./App.css";
 
+// import Particles from 'react-particles-js';
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -47,8 +49,22 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              {/* <PrivateRoute exact path="/:id" component={ItemPage} /> */}
               <PrivateRoute exact path="/generateQR" component={GenerateQR} />
             </Switch>
+            {/* <Particles
+              params={{
+                particles: {
+                  number: {
+                    value: 200,
+                    density: {
+                      enable: true,
+                      value_area: 1000,
+                    }
+                  },
+                },
+              }}
+            /> */}
           </div>
         </Router>
       </Provider>

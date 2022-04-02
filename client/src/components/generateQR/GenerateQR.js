@@ -1,6 +1,5 @@
 import { Link, withRouter } from "react-router-dom";
 import { useState } from "react";
-import QRCodeStyling from "qr-code-styling";
 import { addItem } from "../../actions/itemActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -10,20 +9,7 @@ const GenerateQR = props => {
     const [data, setData] = useState({
         itemName: ''
     });
-    const qrCode = new QRCodeStyling({
-        width: 300,
-        height: 300,
-        image:
-            "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-        dotsOptions: {
-            color: "#4267b2",
-            type: "rounded"
-        },
-        imageOptions: {
-            crossOrigin: "anonymous",
-            margin: 20
-        }
-    });
+
     const onChange = e => {
         setData({ [e.target.name]: e.target.value })
     }
@@ -39,10 +25,12 @@ const GenerateQR = props => {
         props.addItem(itemData, props.history);
     }
     return (
-        <div className="container" style={{ marginTop: "2rem" }}>
+        <div className="container" style={{ marginTop: "2rem", color: "#FFF" }}>
             <div className="row">
                 <div className="col s8 offset-s2">
-                    <Link to="/dashboard" className="btn-flat waves-effect">
+                    <Link to="/dashboard" className="btn-flat waves-effect" style={{
+                        color: "#EEE"
+                    }}>
                         <i className="material-icons left">keyboard_backspace</i> Back to
                         Dashboard
                     </Link>

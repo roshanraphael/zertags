@@ -19,6 +19,25 @@ export const addItem = (itemData, history) => dispatch => {
         );
 }
 
+export const getItems = user => dispatch => {
+    // console.log("getItems running");
+    axios
+        .get("/api/items/", {
+            email: user.email
+        })
+        .then(res => {
+            const items = res.items;
+            dispatch(setCurrentItems(items));
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err
+            })
+        })
+}
+
 const setCurrentItems = items => {
     return {
         type: SET_ITEMS,

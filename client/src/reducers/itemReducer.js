@@ -6,14 +6,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch(action.type) {
-        case SET_ITEMS: () => {
-            const newState = {
+        case SET_ITEMS:
+            return {
                 ...state,
                 items: action.payload
             }
-            console.log("newstate: ", newState);
-            return newState;
-        }
         default:
             return state;
     }
