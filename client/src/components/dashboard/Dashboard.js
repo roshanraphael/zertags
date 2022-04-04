@@ -7,17 +7,19 @@ import { getItems } from "../../actions/itemActions";
 import "./Dashboard.css";
 import QrReader from 'react-qr-scanner';
 import QRCodeStyling from "qr-code-styling";
+// import { useAlert } from 'react-alert'
 
-
-
-
-const ScanQR = ({ setScanResult }) => {
+const ScanQR = ({ setScanResult, history }) => {
+  // const alert = useAlert()
   const handleCamError = (error) => {
     console.log(error);
   };
   const handleCamScan = (result) => {
     if (result) {
       setScanResult(result.text);
+      const itemId = result.text.split('/').at(-1);
+      console.log(itemId);
+      history.push(`/item/${itemId}`);
     }
   }
   return (
@@ -36,6 +38,7 @@ const QRViewer = props => {
 
 const Dashboard = props => {
   console.log(props);
+  const history = props.history;
   const [scanResult, setScanResult] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const { user } = props.auth;
@@ -104,8 +107,9 @@ const Dashboard = props => {
                 <div className="col s12">
                   <ScanQR
                     setScanResult={setScanResult}
+                    history={history}
                   />
-                  <h3>{scanResult}</h3>
+                  {/* <h3>{scanResult}</h3> */}
                 </div>
               )
               : ''
@@ -176,7 +180,7 @@ const Dashboard = props => {
                       margin: 20
                     }
                   });
-                  (
+                  return  (
 
                     <div className="col s12 m6 l4">
                       <div className="card" key={item._id} style={{

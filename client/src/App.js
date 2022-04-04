@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 
+
+
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -14,9 +16,19 @@ import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import GenerateQR from "./components/generateQR/GenerateQR";
+import Item from "./components/item/Item";
 import "./App.css";
 
 // import Particles from 'react-particles-js';
+import { Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
+
+const options = {
+  position: 'bottom center',
+  timeout: 5000,
+  offset: '30px',
+  transition: 'scale'
+}
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -37,10 +49,11 @@ if (localStorage.jwtToken) {
     window.location.href = "./login";
   }
 }
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
+const App = () => {
+  return (
+    <Provider store={store}>
+      {/* <AlertProvider template={AlertTemplate} {...options}> */}
+
         <Router>
           <div className="App">
             <Navbar />
@@ -51,6 +64,7 @@ class App extends Component {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               {/* <PrivateRoute exact path="/:id" component={ItemPage} /> */}
               <PrivateRoute exact path="/generateQR" component={GenerateQR} />
+              <PrivateRoute exact path="/item/:id" component={Item} />
             </Switch>
             {/* <Particles
               params={{
@@ -67,8 +81,8 @@ class App extends Component {
             /> */}
           </div>
         </Router>
-      </Provider>
-    );
-  }
+      {/* </AlertProvider> */}
+    </Provider>
+  );
 }
 export default App;
