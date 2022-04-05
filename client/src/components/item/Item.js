@@ -5,8 +5,8 @@ import { useEffect, useState, useRef } from 'react';
 import QRCodeStyling from "qr-code-styling";
 
 import axios from 'axios';
-
 import Loader from '../Loader/Loader';
+import GeoLocator from '../geolocater/GeoLocater';
 
 const QRViewer = props => {
     const item = props.item;
@@ -49,7 +49,13 @@ const Item = (props) => {
     window.scrollTo(0, 0);
     const [item, setItem] = useState(null);
     const [loading, isLoading] = useState(true);
-
+    const [location, setLocation] = useState(null);
+    const askLocation = () => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log(position);
+            setLocation(position.coords);
+        })
+    }
     useEffect(() => {
         const fetchItems = async (user) => {
             const { data } = await axios.get("http://localhost:5000/api/items/", {
@@ -77,13 +83,24 @@ const Item = (props) => {
                         position: 'absolute',
                         top: '50vh',
                         left: '50vw'
-                    }}/>
+                    }} />
                 ) :
                     item ? (
                         <>
-                            <h4>{item.name}</h4>
-                            <p>{item.description}</p>
-                            <QRViewer item={item} />
+                            <div className="row" style={{
+                                width: "100%"
+                            }}>
+                                <div className="col s6">
+                                    <h4>{item.name}</h4>
+                                    <p>{item.description}</p>
+                                    <QRViewer item={item} />
+                                </div>
+                                <div className="col s6">
+                                    <button className="btn btn-large" onClick={() => askLocation()}>Send Location</button>
+                                    <GeoLocator location={location} />
+                                </div>
+                            </div>
+
                         </>
                     )
                         : ''}

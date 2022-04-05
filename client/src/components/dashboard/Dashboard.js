@@ -21,6 +21,7 @@ const ScanQR = ({ setScanResult, history }) => {
   };
   const handleCamScan = (result) => {
     if (result) {
+      console.log(result);
       setScanResult(result.text);
       const itemId = result.text.split('/').at(-1);
       console.log(itemId);

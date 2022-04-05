@@ -64,7 +64,7 @@ const App = () => {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               {/* <PrivateRoute exact path="/:id" component={ItemPage} /> */}
               <PrivateRoute exact path="/generateQR" component={GenerateQR} />
-              <PrivateRoute exact path="/item/:id" component={Item} />
+              <PrivateRoute exact path="/finder/:id" component={Item} />
             </Switch>
             {/* <Particles
               params={{

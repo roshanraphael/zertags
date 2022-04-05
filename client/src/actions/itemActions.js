@@ -7,8 +7,8 @@ export const addItem = (itemData, history) => dispatch => {
         .post("http://localhost:5000/api/items/", itemData)
         .then(res => {
             // console.log("Res.data", res.data);
-            dispatch(setCurrentItems(res.data))
             history.push("/dashboard")
+            dispatch(setCurrentItems(res.data))
         })
         .catch(err => {
             console.error(err);
