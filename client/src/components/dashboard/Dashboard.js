@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, StaticRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
@@ -7,7 +7,17 @@ import { getItems } from "../../actions/itemActions";
 import "./Dashboard.css";
 import QrReader from 'react-qr-scanner';
 import QRCodeStyling from "qr-code-styling";
+import axios from 'axios';
+
 // import { useAlert } from 'react-alert'
+import store from './../../store'
+
+const fetchItems = async (user) => {
+  const { data } = await axios.get("http://localhost:5000/api/items/", {
+    email: user.email
+  });
+  return data;
+}
 
 const ScanQR = ({ setScanResult, history }) => {
   // const alert = useAlert()
@@ -38,11 +48,19 @@ const QRViewer = props => {
 
 const Dashboard = props => {
   console.log(props);
+  const dispatch = props.dispatch;
   const history = props.history;
   const [scanResult, setScanResult] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const { user } = props.auth;
-  const { items } = props.items;
+  // const { items } = props.items;
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    fetchItems(user).then(data => {
+      console.log(data);
+      setItems(data);
+    }).catch(err => console.log(err));
+  }, []);
   console.log("Items: ", items);
   const onLogoutClick = e => {
     e.preventDefault();
@@ -180,7 +198,7 @@ const Dashboard = props => {
                       margin: 20
                     }
                   });
-                  return  (
+                  return (
 
                     <div className="col s12 m6 l4">
                       <div className="card" key={item._id} style={{
