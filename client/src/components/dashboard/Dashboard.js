@@ -12,6 +12,7 @@ import axios from 'axios';
 // import { useAlert } from 'react-alert'
 import store from './../../store'
 
+import Loader from '../Loader/Loader';
 
 const ScanQR = ({ setScanResult, history }) => {
   // const alert = useAlert()
@@ -217,7 +218,7 @@ const Dashboard = props => {
       }}>
         <div className="col s12">
           {loading ? (
-            <h6>Loading...</h6>
+            <Loader />
           ) : items && items.length > 0 ? (
             <>
               <h5>Your items:</h5>
