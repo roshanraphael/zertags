@@ -37,7 +37,37 @@ const ScanQR = ({ setScanResult, history }) => {
 }
 
 const QRViewer = props => {
-
+  const item = props.item;
+  const ref = useRef(null);
+  const [qrCode] = useState(new QRCodeStyling({
+    width: 300,
+    height: 300,
+    data: `http://localhost:3000/item/${item._id}`,
+    dotsOptions: {
+      color: "#222"
+    },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 20
+    }
+  }));
+  useEffect(() => {
+    if (ref.current) {
+      qrCode.append(ref.current);
+    }
+  }, [qrCode, ref]);
+  const onDownloadClick = () => {
+    if (!qrCode) return;
+    qrCode.download({
+      extension: '.png'
+    })
+  }
+  return (
+    <>
+    <div ref={ref} />
+    <button onClick={onDownloadClick}>Download</button>
+    </>
+  )
 }
 
 const Dashboard = props => {
@@ -49,7 +79,7 @@ const Dashboard = props => {
   const { user } = props.auth;
   // const { items } = props.items;
   const [items, setItems] = useState([]);
-
+  const [loading, isLoading] = useState(true);
   useEffect(() => {
     const fetchItems = async (user) => {
       console.log('sds');
@@ -61,7 +91,10 @@ const Dashboard = props => {
       );
       return data.items;
     }
-    fetchItems(user).then(data => setItems(data));
+    fetchItems(user).then(data => {
+      setItems(data)
+      isLoading(false);
+    });
   }, [])
 
   console.log("Items: ", items);
@@ -183,32 +216,24 @@ const Dashboard = props => {
         width: "100%"
       }}>
         <div className="col s12">
-          {items && items.length > 0 ? (
+          {loading ? (
+            <h6>Loading...</h6>
+          ) : items && items.length > 0 ? (
             <>
               <h5>Your items:</h5>
               <div className="row">
-                {items.map(item => {
-                  const qrCode = new QRCodeStyling({
-                    width: 300,
-                    height: 300,
-                    data: "teststring",
-                    dotsOptions: {
-                      color: "#4267b2",
-                      type: "rounded"
-                    },
-                    imageOptions: {
-                      crossOrigin: "anonymous",
-                      margin: 20
-                    }
-                  });
+                {items.map((item, key) => {
+                 
                   return (
-
-                    <div className="col s12 m6 l4">
+                    <div className="col s12 m6 l4" key={key}>
                       <div className="card" key={item._id} style={{
                         margin: "1rem"
                       }}>
                         <div className="card-image waves-effect waves-block waves-light">
-                          <img className="activator" src="https://ae01.alicdn.com/kf/HTB1PWh8a4_rK1RkHFqDq6yJAFXam/kitten-Diamond-Embroidery-sale-cute-cat-Picture-Of-Rhinestone-pet-DIY-Diamond-Painting-Cross-Stitch-Full.jpg_Q90.jpg_.webp" />
+                         <QRViewer
+                          item={item}
+                         />
+                          {/* <img className="activator" src="https://ae01.alicdn.com/kf/HTB1PWh8a4_rK1RkHFqDq6yJAFXam/kitten-Diamond-Embroidery-sale-cute-cat-Picture-Of-Rhinestone-pet-DIY-Diamond-Painting-Cross-Stitch-Full.jpg_Q90.jpg_.webp" /> */}
                         </div>
                         <div className="card-content waves-effect waves-block waves-light activator">
                           <span className="card-title grey-text text-darken-4">{item.name}</span>
@@ -223,7 +248,9 @@ const Dashboard = props => {
                 })}
               </div>
             </>
-          ) : ''}
+          ) : (
+            <h6>You have not added any items yet.</h6>
+          )}
         </div>
 
       </div>
