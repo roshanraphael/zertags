@@ -3,7 +3,7 @@ import { Link, StaticRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { getItems } from "../../actions/itemActions";
+// import { getItems } from "../../actions/itemActions";
 import "./Dashboard.css";
 import QrReader from 'react-qr-scanner';
 import QRCodeStyling from "qr-code-styling";
@@ -12,12 +12,6 @@ import axios from 'axios';
 // import { useAlert } from 'react-alert'
 import store from './../../store'
 
-const fetchItems = async (user) => {
-  const { data } = await axios.get("http://localhost:5000/api/items/", {
-    email: user.email
-  });
-  return data;
-}
 
 const ScanQR = ({ setScanResult, history }) => {
   // const alert = useAlert()
@@ -55,12 +49,21 @@ const Dashboard = props => {
   const { user } = props.auth;
   // const { items } = props.items;
   const [items, setItems] = useState([]);
+
   useEffect(() => {
-    fetchItems(user).then(data => {
-      console.log(data);
-      setItems(data);
-    }).catch(err => console.log(err));
-  }, []);
+    const fetchItems = async (user) => {
+      console.log('sds');
+      const { data } = await axios.get("http://localhost:5000/api/items/", {
+        params: {
+          email: user.email
+        }
+      }
+      );
+      return data.items;
+    }
+    fetchItems(user).then(data => setItems(data));
+  }, [])
+
   console.log("Items: ", items);
   const onLogoutClick = e => {
     e.preventDefault();
@@ -69,9 +72,9 @@ const Dashboard = props => {
   const toggleShowScanner = () => {
     setShowScanner(!showScanner);
   }
-  if (user) {
-    props.getItems(user);
-  }
+  // if (user) {
+  //   props.getItems(user);
+  // }
   return (
     <div style={{ height: "75vh", flexDirection: "column", color: "white" }} className="container valign-wrapper">
       <div className="row">
@@ -242,5 +245,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { logoutUser, getItems }
+  { logoutUser }
 )(Dashboard);

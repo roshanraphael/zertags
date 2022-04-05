@@ -9,9 +9,9 @@ const User = require("../../models/User");
 const Item = require("../../models/Item");
 
 router.get("/", (req, res) => {
-    const email = req.body.email;
+    const email = req.query.email;
     // res.status(200).json({message: email});
-    if (!email) return res.status(500);
+    if (!email || email === undefined) return res.status(500);
     // Item
     //     .find({email})
     //     .exec((err, items) => {
