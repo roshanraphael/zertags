@@ -42,6 +42,25 @@ router.get("/", (req, res) => {
     // })
 });
 
+router.get("/:id", (req, res) => {
+    const email = req.query.email;
+    const { id } = req.params;
+    User.findOne({ email }).exec(function (err, result) {
+        if (err) {
+            console.log(err);
+            return res.status(500);
+        }
+        // console.log(result);
+        const item = result.items.filter(x => x._id === id);
+        console.log(item);
+        if (item.length == 0) {
+            res.status(404);
+        } else {
+            return res.status(200).send(item[0]);
+        }
+    });
+})
+
 router.post("/", (req, res) => {
     const email = req.body.email;
     const name = req.body.itemName;
@@ -61,7 +80,7 @@ router.post("/", (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log("Sucess",success)
+                    console.log("Sucess", success)
                     return res.status(200).send(success.items)
                 }
             }

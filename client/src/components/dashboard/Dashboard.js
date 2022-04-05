@@ -40,8 +40,8 @@ const QRViewer = props => {
   const item = props.item;
   const ref = useRef(null);
   const [qrCode] = useState(new QRCodeStyling({
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     data: `http://localhost:3000/item/${item._id}`,
     dotsOptions: {
       color: "#222"
@@ -63,10 +63,10 @@ const QRViewer = props => {
     })
   }
   return (
-    <>
-    <div ref={ref} />
-    <button onClick={onDownloadClick}>Download</button>
-    </>
+    // <div className={props.className}>
+      <div ref={ref} />
+      // <button className="btn" onClick={onDownloadClick}>Download</button> */}
+    // </div>
   )
 }
 
@@ -223,17 +223,40 @@ const Dashboard = props => {
               <h5>Your items:</h5>
               <div className="row">
                 {items.map((item, key) => {
-                 
+
                   return (
                     <div className="col s12 m6 l4" key={key}>
-                      <div className="card" key={item._id} style={{
+                      <div class="card">
+                        <div class="card-image" style={{
+                          display: 'grid',
+                          placeItems: 'center'
+                        }}>
+                          <QRViewer
+                            item={item}
+                          />
+                        </div>
+                        <div class="card-content">
+                          <span class="card-title" style={{
+                            color: "black"
+                          }}>{item.name}</span>
+                          <p style={{
+                            color: "black"
+                          }}>
+                            {item.description}
+                          </p>
+                        </div>
+                        <div class="card-action">
+                          <Link to={`/item/${item._id}`}>VIEW</Link>
+                        </div>
+                      </div>
+                      {/* <div className="card" key={item._id} style={{
                         margin: "1rem"
                       }}>
                         <div className="card-image waves-effect waves-block waves-light">
-                         <QRViewer
-                          item={item}
-                         />
-                          {/* <img className="activator" src="https://ae01.alicdn.com/kf/HTB1PWh8a4_rK1RkHFqDq6yJAFXam/kitten-Diamond-Embroidery-sale-cute-cat-Picture-Of-Rhinestone-pet-DIY-Diamond-Painting-Cross-Stitch-Full.jpg_Q90.jpg_.webp" /> */}
+                          <QRViewer
+                            className="activator"
+                            item={item}
+                          />
                         </div>
                         <div className="card-content waves-effect waves-block waves-light activator">
                           <span className="card-title grey-text text-darken-4">{item.name}</span>
@@ -242,7 +265,7 @@ const Dashboard = props => {
                           <span className="card-title grey-text text-darken-4">Card Title<i className="material-icons right">close</i></span>
                           <p>Here is some more information about this product that is only revealed once clicked on.</p>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   )
                 })}
