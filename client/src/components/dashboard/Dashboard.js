@@ -227,7 +227,9 @@ const Dashboard = props => {
 
                   return (
                     <div className="col s12 m6 l4" key={key}>
-                      <div class="card">
+                      <div class="card" style={{
+                        opacity: "0.9"
+                      }}>
                         <div class="card-image" style={{
                           display: 'grid',
                           placeItems: 'center'
@@ -240,11 +242,7 @@ const Dashboard = props => {
                           <span class="card-title" style={{
                             color: "black"
                           }}>{item.name}</span>
-                          <p style={{
-                            color: "black"
-                          }}>
-                            {item.description}
-                          </p>
+
                         </div>
                         <div class="card-action">
                           <Link to={`/item/${item._id}`}>VIEW</Link>
