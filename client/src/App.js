@@ -20,8 +20,8 @@ import Item from "./components/item/Item";
 import "./App.css";
 
 // import Particles from 'react-particles-js';
-import { Provider as AlertProvider } from 'react-alert';
-import AlertTemplate from 'react-alert-template-basic';
+// import { Provider as AlertProvider } from 'react-alert';
+// import AlertTemplate from 'react-alert-template-basic';
 
 const options = {
   position: 'bottom center',

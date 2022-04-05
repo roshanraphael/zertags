@@ -17,3 +17,10 @@ body {
 		background-position: 0% 50%;
 	}
 }
+
+.leaflet-container {
+	width: 100%;
+	
+	z-index: 99;
+  }
+  

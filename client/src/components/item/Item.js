@@ -7,6 +7,7 @@ import QRCodeStyling from "qr-code-styling";
 import axios from 'axios';
 import Loader from '../Loader/Loader';
 import GeoLocator from '../geolocater/GeoLocater';
+import Locater from "../Locater/Locater";
 
 const QRViewer = props => {
     const item = props.item;
@@ -90,14 +91,19 @@ const Item = (props) => {
                             <div className="row" style={{
                                 width: "100%"
                             }}>
-                                <div className="col s6">
+                                <div className="col s12 l6">
                                     <h4>{item.name}</h4>
                                     <p>{item.description}</p>
                                     <QRViewer item={item} />
                                 </div>
-                                <div className="col s6">
+                                <div className="col s12 l6">
                                     <button className="btn btn-large" onClick={() => askLocation()}>Send Location</button>
-                                    <GeoLocator location={location} />
+                                    {location ? (
+                                        <>
+                                            <GeoLocator location={location} />
+                                            {/* <Locater location={location} /> */}
+                                        </>
+                                    ) : ''}
                                 </div>
                             </div>
 
