@@ -13,8 +13,8 @@ const QRViewer = props => {
     const item = props.item;
     const ref = useRef(null);
     const [qrCode] = useState(new QRCodeStyling({
-        width: 400,
-        height: 400,
+        width: 300,
+        height: 300,
         data: `http://localhost:3000/item/${item._id}`,
         dotsOptions: {
             color: "#222"
@@ -45,40 +45,58 @@ const QRViewer = props => {
 
 
 const Item = (props) => {
-    const { id } = useParams();
+    const { id, userId } = useParams();
     const { user } = props.auth;
     window.scrollTo(0, 0);
     const [item, setItem] = useState(null);
     const [loading, isLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchItems = async (user) => {
+            const { data } = await axios.get(`http://localhost:5000/api/items/${id}/${userId}`);
+            return data;
+        }
+        fetchItems(user).then(data => {
+            console.log(data);
+            // const res = data.filter(i => i._id === id)[0];
+            // console.log(res);
+            setItem(data);
+            isLoading(false);
+        });
+    }, [])
+
     const [location, setLocation] = useState(null);
-    const askLocation = () => {
+    const [message, setMessage] = useState('');
+    const askLocation = (e) => {
+        e.preventDefault();
         navigator.geolocation.getCurrentPosition(function (position) {
             console.log(position);
             setLocation(position.coords);
         })
     }
-    useEffect(() => {
-        const fetchItems = async (user) => {
-            const { data } = await axios.get("http://localhost:5000/api/items/", {
-                params: {
-                    email: user.email
-                }
-            }
-            );
-            return data.items;
-        }
-        fetchItems(user).then(data => {
-            console.log(data);
-            const res = data.filter(i => i._id === id)[0];
-            console.log(res);
-            setItem(res);
-            isLoading(false);
+    const onChange = e => {
+        setMessage(e.target.value);
+    }
+    const addNotif = async () => {
+        console.log(item);
+        console.log(user._id);
+        const { data } = await axios.post(`http://localhost:5000/api/items/notif/${item._id}/${userId}`, {
+            latitude: location.latitude || '',
+            longitude: location.longitude || '',
+            message,
         });
-    }, [])
-
+        return data;
+    };
+    const handleSubmit = e => {
+        e.preventDefault();
+        console.log(location);
+        console.log(message);
+        addNotif();
+    }
+   
     return (
         <>
-            <div style={{ height: "75vh", flexDirection: "column", color: "white" }} className="container valign-wrapper">
+            <div style={{ height: "75vh", paddingTop: "5vh", flexDirection: "column", color: "white" }} className="container valign-wrapper">
                 {loading ? (
                     <Loader style={{
                         position: 'absolute',
@@ -97,13 +115,24 @@ const Item = (props) => {
                                     <QRViewer item={item} />
                                 </div>
                                 <div className="col s12 l6">
-                                    <button className="btn btn-large" onClick={() => askLocation()}>Send Location</button>
-                                    {location ? (
-                                        <>
-                                            <GeoLocator location={location} />
-                                            {/* <Locater location={location} /> */}
-                                        </>
-                                    ) : ''}
+                                    <form>
+                                        <div>
+                                            Hey, thanks for finding my lost item. Could you please help me with the details to contact you?
+                                        </div>
+                                        <div className="input-field">
+                                            <label htmlFor="messageBox">Message</label>
+                                            <input value={message} onChange={e => onChange(e)} id="messageBox" type="text" name="message" rows={5} />
+                                        </div>
+                                        <button className="btn btn-small" onClick={(e) => askLocation(e)}>Add location</button>
+                                        <p><button className="btn" type="submit" onClick={e => handleSubmit(e)}>Submit</button></p>
+                                        {location ? (
+                                            <>
+                                                <GeoLocator location={location} />
+                                                {/* <Locater location={location} /> */}
+                                            </>
+                                        ) : ''}
+                                    </form>
+
                                 </div>
                             </div>
 
