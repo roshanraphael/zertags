@@ -8,6 +8,8 @@ import "./Dashboard.css";
 import QrReader from 'react-qr-scanner';
 import QRCodeStyling from "qr-code-styling";
 import axios from 'axios';
+import GeoLocator from '../geolocater/GeoLocater';
+
 
 // import { useAlert } from 'react-alert'
 import store from './../../store'
@@ -33,7 +35,7 @@ const ScanQR = ({ setScanResult, history }) => {
       onError={handleCamError}
       onScan={handleCamScan}
       delay={200}
-      style={{ width: '100%'} }
+      style={{ width: '100%' }}
       legacyMode
     />
   );
@@ -67,8 +69,8 @@ const QRViewer = props => {
   }
   return (
     // <div className={props.className}>
-      <div ref={ref} />
-      // <button className="btn" onClick={onDownloadClick}>Download</button> */}
+    <div ref={ref} />
+    // <button className="btn" onClick={onDownloadClick}>Download</button> */}
     // </div>
   )
 }
@@ -83,8 +85,11 @@ const Dashboard = props => {
   const { user } = props.auth;
   // const { items } = props.items;
   const [items, setItems] = useState([]);
+  const [notif, setNotif] = useState([])
   const [loading, isLoading] = useState(true);
   useEffect(() => {
+    setLocalUser(JSON.parse(localStorage.getItem('user')))
+
     const fetchItems = async (user) => {
       const { data } = await axios.get("http://localhost:5000/api/items/", {
         params: {
@@ -99,9 +104,19 @@ const Dashboard = props => {
       isLoading(false);
     });
 
-    setLocalUser(JSON.parse(localStorage.getItem('user')))
 
+    fetchNotify(user).then(noti => {
+      console.log("DATA", noti)
+      setNotif(noti)
+    })
   }, [])
+
+  const fetchNotify = async (user) => {
+    console.log("LOCALUSER", user)
+    let userId = user.id
+    const { data } = await axios.get(`http://localhost:5000/api/items/notif/${userId}`);
+    return data;
+  }
 
   console.log("Items: ", items);
   const onLogoutClick = e => {
@@ -173,9 +188,6 @@ const Dashboard = props => {
               )
               : ''
             }
-
-
-
           </div>
         </div>
         <div className="col s12" style={{
@@ -220,6 +232,41 @@ const Dashboard = props => {
       <div className="row" style={{
         width: "100%"
       }}>
+
+        <div className="col s12">
+          {loading ? (
+            <Loader />
+          ) : notif && notif.length > 0 ? (
+            <>
+              <h5>Your notif:</h5>
+              <div className="row">
+                {notif.map((item, key) => {
+
+                  return (
+                    <div className="col s12 m4 l3" key={key}>
+                      <div class="card">
+                        {/* <div class="card-image waves-effect waves-block waves-light">
+                        </div> */}
+                        <div class="card-content">
+                        <p><Link to={`/item/${item.item}/${localUser._id}`}>VIEW ITEM </Link></p>
+
+                          <a target="_blank" href={`https://maps.google.com/?q=${item.latitude},${item.longitude}`}>Open location in Maps</a>
+                          {/* <span class="card-title  grey-text text-darken-4">Name title<i class="material-icons right">more_vert</i></span> */}
+                        </div>
+                        <div class="card-reveal">
+                          <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                          <p>{item.message}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : (
+            <h6>You have not added any items yet.</h6>
+          )}
+        </div>
         <div className="col s12">
           {loading ? (
             <Loader />

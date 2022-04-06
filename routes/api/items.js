@@ -74,20 +74,33 @@ router.get("/:id", (req, res) => {
     return res.status(500);
 });
 
-router.get("/notif/:userId", (req, res) => {
-    console.log("PARAMS", req.params)
-    const { userId }  = req.params;
-    Notif.find({
-        user: userId
-    }).then(notifs => {
-        // console.log(notifs);
-        res.status(200).send(notifs);
-    }).catch(err => {
-        res.status(500).send(err);
-    })
-    // return res.status(200);
-})
+// router.get("/notif/:userId", (req, res) => {
+//     console.log("PARAMS", req.params)
+//     const { userId }  = req.params;
+//     Notif.find({
+//         user: userId
+//     }).then(notifs => {
+//         // console.log(notifs);
+//         res.status(200).send(notifs);
+//     }).catch(err => {
+//         res.status(500).send(err);
+//     })
+//     // return res.status(200);
+// })
 
+router.get('/notif/:userId', (req, res) => {
+     const { userId }  = req.params;
+
+    Notif.find({user: userId})
+    .exec((err, notifs) => {
+            if (!err) {
+                console.log(notifs)
+                res.status(200).send(notifs);
+            } else {
+                res.status(500).send(err);
+            }
+        })
+})
 
 router.get("/:id/:userId", (req, res) => {
     // const email = req.query.email;

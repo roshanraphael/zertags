@@ -11,6 +11,7 @@ const mapStyles = {
 
 const GeoLocater = (props) => {
     const { location, google } = props;
+    console.log(location);
     return (
         <div>
             {location ? (
