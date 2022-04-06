@@ -252,11 +252,14 @@ const Dashboard = props => {
 
                           <a target="_blank" href={`https://maps.google.com/?q=${item.latitude},${item.longitude}`}>Open location in Maps</a>
                           {/* <span class="card-title  grey-text text-darken-4">Name title<i class="material-icons right">more_vert</i></span> */}
+                          <p style={{
+                            color: "#000"
+                          }}>Message: {item.message}</p>
                         </div>
-                        <div class="card-reveal">
+                        {/* <div class="card-reveal">
                           <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
                           <p>{item.message}</p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   )
