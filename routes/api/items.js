@@ -74,12 +74,26 @@ router.get("/:id", (req, res) => {
     return res.status(500);
 });
 
+router.get("/notif/:userId", (req, res) => {
+    console.log("PARAMS", req.params)
+    const { userId }  = req.params;
+    Notif.find({
+        user: userId
+    }).then(notifs => {
+        // console.log(notifs);
+        res.status(200).send(notifs);
+    }).catch(err => {
+        res.status(500).send(err);
+    })
+    // return res.status(200);
+})
+
 
 router.get("/:id/:userId", (req, res) => {
     // const email = req.query.email;
 
     const { id, userId } = req.params;
-    console.log(id, userId);
+    // console.log(id, userId);
     User.findById(userId).then(user => {
         if (!user) return res.status(404);
         const item = user.items.filter(x => x._id == id);
@@ -88,7 +102,11 @@ router.get("/:id/:userId", (req, res) => {
         if (item.length == 0) {
             res.status(404);
         } else {
-            return res.status(200).send(item[0]);
+            let itemData = {
+                data : item[0],
+                userId
+            }
+            return res.status(200).send(itemData);
         }
     });
     // exec(function (err, result) {
@@ -148,29 +166,16 @@ router.post("/notif/:itemId/:userId", (req, res) => {
     newNotif.save().then(notif => res.json(notif)).catch(err => console.log(err));
 });
 
-// router.get("/notif/:userId", (req, res) => {
-//     console.log(req.params)
-//     const { userId }  = req.params;
-//     console.log("fdfd", userId);
-//     Notif.find({
-//         user: userId
-//     }).then(notifs => {
-//         // console.log(notifs);
-//         res.status(200).send({message: 'success'});
-//     }).catch(err => {
-//         res.status(500).send(err);
-//     })
-//     // return res.status(200);
-// })
 
-router.get("/notifs", (req, res) => {
-    Notif.find().exec( (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500);
-        }
-        console.log('Notifications:', result);
-    })
-})
+
+// router.get("/notifs", (req, res) => {
+//     Notif.find({}).exec( (err, result) => {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500);
+//         }
+//         console.log('Notifications:', result);
+//     })
+// })
 
 module.exports = router;

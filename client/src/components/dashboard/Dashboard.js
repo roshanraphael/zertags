@@ -23,17 +23,18 @@ const ScanQR = ({ setScanResult, history }) => {
     if (result) {
       console.log(result);
       setScanResult(result.text);
-      const itemId = result.text.split('/').at(-1);
-      console.log(itemId);
-      history.push(`/item/${itemId}`);
+      // const itemId = result.text.split('/').at(-1);
+      // console.log(itemId);
+      // history.push(`/item/${itemId}`);
     }
   }
   return (
     <QrReader
       onError={handleCamError}
       onScan={handleCamScan}
-      delay={1000}
-      style={{ width: '100%' }}
+      delay={200}
+      style={{ width: '100%'} }
+      legacyMode
     />
   );
 }
@@ -78,13 +79,13 @@ const Dashboard = props => {
   const history = props.history;
   const [scanResult, setScanResult] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
+  const [localUser, setLocalUser] = useState({})
   const { user } = props.auth;
   // const { items } = props.items;
   const [items, setItems] = useState([]);
   const [loading, isLoading] = useState(true);
   useEffect(() => {
     const fetchItems = async (user) => {
-      console.log('sds');
       const { data } = await axios.get("http://localhost:5000/api/items/", {
         params: {
           email: user.email
@@ -97,6 +98,9 @@ const Dashboard = props => {
       setItems(data)
       isLoading(false);
     });
+
+    setLocalUser(JSON.parse(localStorage.getItem('user')))
+
   }, [])
 
   console.log("Items: ", items);
@@ -127,7 +131,6 @@ const Dashboard = props => {
         margin: "auto 0",
         width: "100%"
       }}>
-
         <div className="col s12" style={{
           display: "flex",
           justifyContent: "center"
@@ -246,7 +249,7 @@ const Dashboard = props => {
 
                         </div>
                         <div class="card-action">
-                          <Link to={`/item/${item._id}`}>VIEW</Link>
+                          <Link to={`/item/${item._id}/${localUser._id}`}>VIEW</Link>
                         </div>
                       </div>
                       {/* <div className="card" key={item._id} style={{
